@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {formatDistance} from 'date-fns';
-import {formatDate} from '../utils/common-functions';
+import {formatDate, formatDateAbsolute} from '../utils/common-functions';
 import Table from './table';
 import Level from './level';
 import MapExplorer from './mapexplorer';
@@ -17,6 +17,7 @@ function Home(props) {
   const [timeseries, setTimeseries] = useState([]);
   const [deltas, setDeltas] = useState([]);
   const [timeseriesMode, setTimeseriesMode] = useState(true);
+  const [timeseriesLogMode, setTimeseriesLogMode] = useState(false);
   const [regionHighlighted, setRegionHighlighted] = useState(undefined);
 
   useEffect(() => {
@@ -58,18 +59,23 @@ function Home(props) {
           <div className="header-mid">
             <div className="titles">
               <h1>India COVID-19 Tracker</h1>
-              <h6>A Crowdsourced Initiative</h6>
+              <h6 style={{fontWeight: 600}}>A Crowdsourced Initiative</h6>
             </div>
             <div className="last-update">
               <h6>Last Updated</h6>
-              <h3>
+              <h6 style={{color: '#28a745', fontWeight: 600}}>
                 {isNaN(Date.parse(formatDate(lastUpdated)))
                   ? ''
                   : formatDistance(
                       new Date(formatDate(lastUpdated)),
                       new Date()
                     ) + ' Ago'}
-              </h3>
+              </h6>
+              <h6 style={{color: '#28a745', fontWeight: 600}}>
+                {isNaN(Date.parse(formatDate(lastUpdated)))
+                  ? ''
+                  : formatDateAbsolute(lastUpdated)}
+              </h6>
             </div>
           </div>
         </div>
@@ -119,17 +125,36 @@ function Home(props) {
                 </div>
               </div>
 
-              <div className="timeseries-mode">
-                <label htmlFor="timeseries-mode">Scale Uniformly</label>
-                <input
-                  type="checkbox"
-                  className="switch"
-                  aria-label="Checked by default to scale uniformly."
-                  checked={timeseriesMode}
-                  onChange={(event) => {
-                    setTimeseriesMode(!timeseriesMode);
-                  }}
-                />
+              <div className="scale-modes">
+                <label>Scale Modes</label>
+                <div className="timeseries-mode">
+                  <label htmlFor="timeseries-mode">Uniform</label>
+                  <input
+                    type="checkbox"
+                    checked={timeseriesMode}
+                    className="switch"
+                    aria-label="Checked by default to scale uniformly."
+                    onChange={(event) => {
+                      setTimeseriesMode(!timeseriesMode);
+                    }}
+                  />
+                </div>
+                <div
+                  className={`timeseries-logmode ${
+                    graphOption !== 1 ? 'disabled' : ''
+                  }`}
+                >
+                  <label htmlFor="timeseries-logmode">Logarithmic</label>
+                  <input
+                    type="checkbox"
+                    checked={graphOption === 1 && timeseriesLogMode}
+                    className="switch"
+                    disabled={graphOption !== 1}
+                    onChange={(event) => {
+                      setTimeseriesLogMode(!timeseriesLogMode);
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -137,6 +162,7 @@ function Home(props) {
               timeseries={timeseries}
               type={graphOption}
               mode={timeseriesMode}
+              logMode={timeseriesLogMode}
             />
           </React.Fragment>
         )}
