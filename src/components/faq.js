@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import React, {useState, useEffect} from 'react';
 
 function FAQ(props) {
   const [faq, setFaq] = useState([]);
@@ -8,11 +8,15 @@ function FAQ(props) {
     getFAQs();
   }, []);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const getFAQs = () => {
     axios
-      .get('https://api.covid19india.org/faq.json')
+      .get('https://api.covid19india.org/website_data.json')
       .then((response) => {
-        setFaq(response.data.faq);
+        setFaq(response.data['faq']);
       })
       .catch((error) => {
         console.log(error);

@@ -2,8 +2,8 @@
 name: Bug report
 about: Create a report to help us improve
 title: ''
-labels: 'Status: Review Needed, Type: Bug'
-assignees: jeremyphilemon, JunaidBabu, sudevschiz
+labels: 'Status: Review Needed'
+assignees: ''
 ---
 
 **Describe the bug**
